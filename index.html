@@ -5,28 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glosario C.S. Peirce</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
+            /* --- Variables de Fuentes --- */
+            --font-code: 'Source Code Pro', 'Courier New', monospace;
+            --font-serif: 'Times New Roman', Times, serif;
+            --current-font: var(--font-code); /* Por defecto */
+
+            /* --- Variables de Tema (Modo LUZ por defecto) --- */
             --bg-color: #ffffff;
-            --text-color: #000000;
-            --border-color: #000000;
-            --hover-bg: #f0f0f0;
+            --text-color: #111111;
+            --border-color: #111111;
+            --hover-bg: #f2f2f2;
+            --secondary-text: #666666;
+        }
+
+        /* --- Modo OSCURO (override) --- */
+        body.dark-mode {
+            --bg-color: #1a1a1a; /* Negro suave, mejor para la vista que #000 */
+            --text-color: #e6e6e6; /* Blanco suave */
+            --border-color: #e6e6e6;
+            --hover-bg: #333333;
+            --secondary-text: #aaaaaa;
         }
 
         body {
-            font-family: 'Courier New', Courier, monospace; /* Tipografía clave */
+            font-family: var(--current-font);
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 2rem;
-            line-height: 1.4;
-            max-width: 900px; /* Ancho más contenido, tipo hoja de papel */
+            line-height: 1.5;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
+            /* Transiciones suaves para cambio de fuente y color */
+            transition: all 0.3s ease;
         }
 
-        /* Header estilo documento */
+        /* --- PANEL DE CONTROLES (Esquina superior derecha) --- */
+        .controls-container {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            font-size: 0.75rem;
+            background: var(--bg-color); /* El fondo debe cambiar con el tema */
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .control-group {
+             display: flex;
+             align-items: center;
+             justify-content: space-between;
+             gap: 10px;
+        }
+        
+        .control-label {
+            font-weight: bold;
+            opacity: 0.7;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            padding: 2px 4px;
+            text-decoration: none;
+            color: var(--text-color); /* Usa la variable de texto actual */
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .control-btn:hover {
+            opacity: 1;
+        }
+
+        .control-btn.active {
+            opacity: 1;
+            text-decoration: underline;
+            border: 1px dotted var(--border-color);
+        }
+
+        /* Responsive para móviles */
+        @media (max-width: 650px) {
+            .controls-container {
+                position: static;
+                margin-bottom: 2rem;
+                border: none;
+                padding: 0;
+                align-items: flex-start;
+            }
+             .control-group {
+                 justify-content: flex-start;
+            }
+        }
+
+        /* --- HEADER --- */
         header {
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 1rem;
@@ -43,6 +126,7 @@
         header p {
             margin: 0.5rem 0 0 0;
             font-size: 0.9rem;
+            color: var(--secondary-text);
         }
 
         /* --- LISTA DE SECCIONES --- */
@@ -74,10 +158,10 @@
             font-size: 1.1rem;
         }
 
-        /* Flecha o indicador ascii */
         .indicator::before {
             content: "[+]";
             margin-right: 8px;
+            font-family: var(--font-code);
         }
 
         .section-item.active .indicator::before {
@@ -87,7 +171,7 @@
         .section-body {
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 1px dashed var(--border-color); /* Línea punteada retro */
+            border-top: 1px dashed var(--border-color);
             display: none;
         }
 
@@ -97,7 +181,7 @@
 
         .section-desc {
             margin-bottom: 1rem;
-            font-size: 0.95rem;
+            font-size: 1rem;
             text-align: justify;
         }
 
@@ -105,13 +189,14 @@
             background: none;
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            padding: 5px 10px;
+            padding: 6px 12px;
             cursor: pointer;
             font-family: inherit;
             font-weight: bold;
             text-transform: uppercase;
             font-size: 0.8rem;
             display: inline-block;
+            transition: all 0.2s;
         }
 
         .btn-enter:hover {
@@ -133,12 +218,14 @@
         .back-link {
             cursor: pointer;
             text-decoration: underline;
+            font-weight: bold;
         }
         
         .back-link:hover {
             background-color: var(--text-color);
             color: var(--bg-color);
             text-decoration: none;
+            padding: 2px 5px;
         }
 
         .concepts-title {
@@ -146,11 +233,12 @@
             text-transform: uppercase;
             margin: 1rem 0;
             font-weight: bold;
+            color: var(--secondary-text);
         }
 
         .concept-entry {
             margin-bottom: 1.5rem;
-            border-left: 2px solid var(--border-color); /* Línea lateral simple */
+            border-left: 3px solid var(--border-color);
             padding-left: 1rem;
         }
 
@@ -158,55 +246,110 @@
             font-weight: bold;
             cursor: pointer;
             margin-bottom: 0.5rem;
+            font-size: 1.05rem;
         }
 
         .concept-term:hover {
             text-decoration: underline;
         }
         
-        /* Detalles ocultos */
         .concept-def {
             display: none;
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
+            font-size: 1rem;
+            margin-top: 0.8rem;
+            text-align: justify;
+            line-height: 1.6;
         }
 
         .concept-entry.open .concept-def {
             display: block;
+            animation: fadeIn 0.3s ease-in;
         }
         
         .concept-entry.open .concept-term::after {
             content: " <";
         }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
 
         #loading {
             font-style: italic;
+            color: var(--secondary-text);
         }
 
     </style>
 </head>
 <body>
 
+<div class="controls-container">
+    <div class="control-group">
+        <span class="control-label">FUENTE:</span>
+        <div>
+            <button class="control-btn font-btn active" id="btn-code" onclick="changeFont('code')">CODE</button> | 
+            <button class="control-btn font-btn" id="btn-times" onclick="changeFont('times')">TIMES</button>
+        </div>
+    </div>
+    <div class="control-group">
+        <span class="control-label">TEMA:</span>
+        <div>
+             <button class="control-btn theme-btn active" id="btn-light" onclick="changeTheme('light')">LUZ</button> | 
+             <button class="control-btn theme-btn" id="btn-dark" onclick="changeTheme('dark')">OSCURO</button>
+        </div>
+    </div>
+</div>
+
 <header>
-    <h1>GLOSARIO_PEIRCE.exe</h1> <p>> Explorando la arquitectura semiótica</p>
-    <p>> Versión: 1.0</p>
+    <h1>GLOSARIO_PEIRCE.exe</h1>
+    <p>> Explorando la arquitectura semiótica</p>
+    <p>> Versión: 3.0 (Dark Mode support)</p>
 </header>
 
-<div id="loading">Cargando base de datos...</div>
+<div id="loading">Cargando módulos de datos...</div>
 
-<div id="sections-view">
-    </div>
+<div id="sections-view"></div>
 
 <div id="concepts-view">
     <div class="nav-bar">
-        <span class="back-link" onclick="showSections()">&lt; VOLVER AL ÍNDICE</span>
+        <span class="back-link" onclick="showSections()">&lt;&lt; REINICIAR ÍNDICE</span>
     </div>
-    
-    <div id="concepts-content">
-        </div>
+    <div id="concepts-content"></div>
 </div>
 
 <script>
+    // --- LÓGICA DE VISUALIZACIÓN (Fuentes y Tema) ---
+    
+    // Cambiar Fuente
+    function changeFont(type) {
+        const root = document.documentElement;
+        document.querySelectorAll('.font-btn').forEach(btn => btn.classList.remove('active'));
+
+        if(type === 'code') {
+            root.style.setProperty('--current-font', 'var(--font-code)');
+            document.getElementById('btn-code').classList.add('active');
+        } else {
+            root.style.setProperty('--current-font', 'var(--font-serif)');
+            document.getElementById('btn-times').classList.add('active');
+        }
+    }
+
+    // Cambiar Tema (Luz/Oscuro)
+    function changeTheme(mode) {
+        const body = document.body;
+        document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+
+        if(mode === 'dark') {
+            body.classList.add('dark-mode');
+            document.getElementById('btn-dark').classList.add('active');
+        } else {
+            body.classList.remove('dark-mode');
+            document.getElementById('btn-light').classList.add('active');
+        }
+    }
+
+
+    // --- LÓGICA DE DATOS (CSV) ---
     let dataSections = [];
     let dataConcepts = [];
     const fileSections = 'Secciones.csv';
@@ -219,11 +362,13 @@
         ]).then(results => {
             dataSections = results[0].data;
             dataConcepts = results[1].data;
-            
             if(dataSections.length > 0) {
                 document.getElementById('loading').style.display = 'none';
                 renderSections();
             }
+        }).catch(error => {
+            document.getElementById('loading').innerText = "Error: No se pudieron cargar los archivos CSV. Asegúrate de ejecutarlos desde un servidor o GitHub Pages.";
+            console.error("Error loading CSVs:", error);
         });
     }
 
@@ -242,58 +387,48 @@
     function renderSections() {
         const container = document.getElementById('sections-view');
         container.innerHTML = '';
-
         dataSections.forEach((row) => {
             const title = row['Sección']; 
             const desc = row['Detalle de sección'];
-
             if(!title) return;
 
             const item = document.createElement('div');
             item.className = 'section-item';
-            
-            // Estructura tipo texto plano
             item.innerHTML = `
                 <div class="section-header">
                     <span class="indicator section-title">${title}</span>
                 </div>
                 <div class="section-body">
                     <div class="section-desc">${desc}</div>
-                    <button class="btn-enter">[ INGRESAR ]</button>
+                    <button class="btn-enter">[ INGRESAR DIRECTORIO ]</button>
                 </div>
             `;
 
-            // Lógica de click
             item.addEventListener('click', (e) => {
-                // Si click en botón, entrar
                 if(e.target.classList.contains('btn-enter')) {
                     openSection(title);
                     e.stopPropagation();
                 } else {
-                    // Si click en otro lado, expandir/colapsar (Acordeón)
-                    // Cerrar otros (opcional, estilo notepad queda mejor uno por uno)
                     document.querySelectorAll('.section-item').forEach(i => {
                         if(i !== item) i.classList.remove('active');
                     });
                     item.classList.toggle('active');
                 }
             });
-
             container.appendChild(item);
         });
     }
 
     function openSection(sectionTitle) {
         const relevantConcepts = dataConcepts.filter(c => c['Secciones'] === sectionTitle);
-
         document.getElementById('sections-view').style.display = 'none';
         document.getElementById('concepts-view').style.display = 'block';
         
         const contentDiv = document.getElementById('concepts-content');
-        contentDiv.innerHTML = `<div class="concepts-title">DIRECTORIO: ${sectionTitle}</div>`;
+        contentDiv.innerHTML = `<div class="concepts-title">DIRECTORIO ACTUAL: /${sectionTitle.toUpperCase()}</div>`;
 
         if(relevantConcepts.length === 0) {
-            contentDiv.innerHTML += '<p>> No se encontraron archivos en este directorio.</p>';
+            contentDiv.innerHTML += '<p>> Directorio vacío. No se encontraron conceptos.</p>';
             return;
         }
 
@@ -304,14 +439,11 @@
                 <div class="concept-term">> ${c['Concepto']}</div>
                 <div class="concept-def">${c['Detalle']}</div>
             `;
-            
             entry.addEventListener('click', () => {
                 entry.classList.toggle('open');
             });
-
             contentDiv.appendChild(entry);
         });
-        
         window.scrollTo(0,0);
     }
 
@@ -321,6 +453,7 @@
         window.scrollTo(0,0);
     }
 
+    // Iniciar aplicación
     init();
 </script>
 
