@@ -16,7 +16,7 @@
             --font-roboto: 'Roboto', sans-serif;
             --font-opensans: 'Open Sans', sans-serif;
             
-            /* Por defecto iniciamos con Lora (la más académica) */
+            /* Por defecto iniciamos con Lora */
             --current-font: var(--font-lora);
 
             /* --- Variables de Tema (Modo LUZ por defecto) --- */
@@ -45,12 +45,12 @@
             margin: 0;
             padding: 2rem;
             
-            /* AUMENTO DE TAMAÑO DE TEXTO (20% más grande que el estándar) */
+            /* Tamaño de texto aumentado (20% más) */
             font-size: 1.2rem; 
             line-height: 1.6;
             
-            /* AUMENTO DE ANCHO DE PÁGINA (30% más ancho: ~1200px) */
-            max-width: 1200px;
+            /* ANCHO REVERTIDO (900px para mejor lectura) */
+            max-width: 900px;
             
             margin-left: auto;
             margin-right: auto;
@@ -62,7 +62,7 @@
             position: absolute;
             top: 1rem;
             right: 2rem;
-            font-size: 0.8rem; /* Controles un poco más pequeños para no estorbar */
+            font-size: 0.8rem;
             background: var(--bg-color);
             border: 1px solid var(--border-color);
             padding: 10px 15px;
@@ -70,7 +70,7 @@
             flex-direction: column;
             gap: 8px;
             z-index: 100;
-            box-shadow: 4px 4px 0px rgba(0,0,0,0.1); /* Sombra dura minimalista */
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
         }
 
         .control-group {
@@ -113,7 +113,6 @@
             border-bottom: 2px solid var(--accent-color);
         }
 
-        /* Ajuste móvil para controles */
         @media (max-width: 800px) {
             .controls-container {
                 position: static;
@@ -131,13 +130,13 @@
 
         /* --- HEADER --- */
         header {
-            border-bottom: 3px solid var(--border-color); /* Borde más grueso */
+            border-bottom: 3px solid var(--border-color);
             padding-bottom: 1.5rem;
             margin-bottom: 3rem;
         }
 
         header h1 {
-            font-size: 2.2rem; /* Título más grande */
+            font-size: 2.2rem;
             margin: 0;
             text-transform: uppercase;
             font-weight: 700;
@@ -155,7 +154,7 @@
         #sections-view {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem; /* Más espacio entre items */
+            gap: 1.5rem;
         }
 
         .section-item {
@@ -167,7 +166,7 @@
 
         .section-item:hover {
             background-color: var(--hover-bg);
-            transform: translateX(5px); /* Pequeño movimiento al hover */
+            transform: translateX(5px);
         }
 
         .section-header {
@@ -190,7 +189,7 @@
         }
 
         .section-item.active .indicator::before {
-            content: "−"; /* Signo menos real */
+            content: "−";
         }
 
         .section-body {
@@ -208,13 +207,12 @@
         .section-desc {
             margin-bottom: 1.5rem;
             text-align: justify;
-            max-width: 90%; /* Para que el texto no sea tan largo de leer */
         }
 
         .btn-enter {
             background: var(--text-color);
             border: 1px solid var(--border-color);
-            color: var(--bg-color); /* Texto invertido para resaltar */
+            color: var(--bg-color);
             padding: 8px 16px;
             cursor: pointer;
             font-family: inherit;
@@ -269,7 +267,7 @@
 
         .concept-entry {
             margin-bottom: 2rem;
-            border-bottom: 1px solid var(--secondary-text); /* Línea sutil abajo */
+            border-bottom: 1px solid var(--secondary-text);
             padding-bottom: 1rem;
         }
 
@@ -304,7 +302,6 @@
             padding-left: 1rem;
             border-left: 2px solid var(--secondary-text);
             color: var(--text-color);
-            max-width: 95%;
         }
 
         .concept-entry.open .concept-def {
